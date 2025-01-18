@@ -6,24 +6,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blocklist Congregator</title>
   <style>
+    /* Global Styles */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
       margin: 20px;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
     }
 
     pre {
       background: #f4f4f4;
-      padding: 10px;
+      padding: 15px;
       border: 1px solid #ddd;
-      overflow: auto;
+      border-radius: 5px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .log {
+      margin-top: 20px;
+      background: #eef6ff;
+      padding: 10px;
+      border-left: 4px solid #007BFF;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .error {
+      color: #ff4d4d;
+    }
+
+    .success {
+      color: #28a745;
     }
   </style>
 </head>
 
 <body>
-  <h1>Blocklist Congregator</h1>
-  <p>Fetching blocklists... Please wait.</p>
-  <pre id="output">Loading...</pre>
+  <div class="container">
+    <h1>Blocklist Congregator</h1>
+    <pre id="output">Loading...</pre>
+    <p id="status">Fetching blocklists... Please wait.</p>
+    <div class="button-container">
+      <button id="copy-btn" onclick="copyBlocklists()">Copy Blocklists to Clipboard</button>
+      <button id="refresh-btn" onclick="fetchBlocklists()">Refresh Blocklists</button>
+    </div>
+    <div id="log" class="log">Logs will appear here...</div>
+  </div>
 
   <script>
     const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
@@ -42,8 +124,23 @@
     ];
 
     async function fetchBlocklists() {
+      const statusElement = document.getElementById("status");
+      const outputElement = document.getElementById("output");
+      const logElement = document.getElementById("log");
+
+      const log = (message, type = "info") => {
+        const msg = document.createElement("div");
+        msg.textContent = message;
+        if (type === "error") msg.style.color = "#ff4d4d";
+        logElement.appendChild(msg);
+        logElement.scrollTop = logElement.scrollHeight;
+      };
+
       try {
-        console.log("Fetching Firebog blocklists...");
+        statusElement.textContent = "Fetching blocklists... Please wait.";
+        log("Starting blocklist fetching process...");
+        logElement.innerHTML = ""; // Clear old logs
+
         const firebogResponse = await fetch(firebogUrl);
 
         if (!firebogResponse.ok) {
@@ -51,19 +148,41 @@
         }
 
         const firebogText = await firebogResponse.text();
-        console.log("Firebog blocklists fetched successfully.");
+        log("Firebog blocklists fetched successfully.");
 
         const firebogLists = firebogText.trim().split("\n");
-
         const allLists = [...firebogLists, ...hategroupLists, ...customLists];
-        console.log("Combined blocklists successfully.");
+        log("Combining Firebog, custom, and hate-group lists.");
 
-        document.getElementById("output").textContent = allLists.join("\n");
+        outputElement.textContent = allLists.join("\n");
+        statusElement.textContent = "Blocklists fetched successfully!";
+        statusElement.className = "success";
+        log("Blocklists displayed successfully.");
       } catch (error) {
-        console.error("Error fetching blocklists:", error);
-        document.getElementById("output").textContent =
-          "Error fetching blocklists. Please check the console for details.";
+        statusElement.textContent = "Error fetching blocklists. Please try again.";
+        statusElement.className = "error";
+        outputElement.textContent = "Error fetching blocklists. Please check the console for details.";
+        log(`Error: ${error.message}`, "error");
       }
+    }
+
+    function copyBlocklists() {
+      const outputElement = document.getElementById("output");
+      const textToCopy = outputElement.textContent;
+
+      if (textToCopy.trim() === "" || textToCopy === "Loading...") {
+        alert("Nothing to copy! Please fetch the blocklists first.");
+        return;
+      }
+
+      navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+          alert("Blocklists copied to clipboard!");
+        })
+        .catch((error) => {
+          console.error("Error copying blocklists:", error);
+          alert("Failed to copy blocklists. Please try again.");
+        });
     }
 
     fetchBlocklists();

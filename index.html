@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blocklist Congregator</title>
   <style>
-    /* Global Styles */
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f9f9f9;
@@ -41,14 +40,9 @@
       margin-bottom: 10px;
     }
 
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
     button {
+      display: block;
+      margin: 10px auto;
       padding: 10px 20px;
       font-size: 1rem;
       background: #007BFF;
@@ -100,13 +94,11 @@
     <h1>Blocklist Congregator</h1>
     <pre id="output">Loading...</pre>
     <p id="status">Fetching blocklists... Please wait.</p>
-    <div class="button-container">
-      <button id="copy-btn" onclick="copyBlocklists()">Copy Blocklists to Clipboard</button>
-      <button id="refresh-btn" onclick="fetchBlocklists()">Refresh Blocklists</button>
-    </div>
+    <button id="copy-btn" onclick="copyToClipboard()">Copy Blocklists</button>
     <div id="log" class="log">Logs will appear here...</div>
+    <button id="refresh-btn" onclick="fetchBlocklists()">Refresh Blocklists</button>
   </div>
-
+  
   <script>
     const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
     const customLists = [
@@ -141,6 +133,8 @@
         log("Starting blocklist fetching process...");
         logElement.innerHTML = ""; // Clear old logs
 
+        console.log("Fetching Firebog blocklists...");
+        log("Fetching Firebog blocklists...");
         const firebogResponse = await fetch(firebogUrl);
 
         if (!firebogResponse.ok) {
@@ -149,16 +143,19 @@
 
         const firebogText = await firebogResponse.text();
         log("Firebog blocklists fetched successfully.");
+        console.log("Firebog blocklists fetched successfully.");
 
         const firebogLists = firebogText.trim().split("\n");
         const allLists = [...firebogLists, ...hategroupLists, ...customLists];
         log("Combining Firebog, custom, and hate-group lists.");
+        console.log("Combined blocklists successfully.");
 
         outputElement.textContent = allLists.join("\n");
         statusElement.textContent = "Blocklists fetched successfully!";
         statusElement.className = "success";
         log("Blocklists displayed successfully.");
       } catch (error) {
+        console.error("Error fetching blocklists:", error);
         statusElement.textContent = "Error fetching blocklists. Please try again.";
         statusElement.className = "error";
         outputElement.textContent = "Error fetching blocklists. Please check the console for details.";
@@ -166,22 +163,18 @@
       }
     }
 
-    function copyBlocklists() {
+    function copyToClipboard() {
       const outputElement = document.getElementById("output");
-      const textToCopy = outputElement.textContent;
+      const logElement = document.getElementById("log");
 
-      if (textToCopy.trim() === "" || textToCopy === "Loading...") {
-        alert("Nothing to copy! Please fetch the blocklists first.");
-        return;
-      }
-
-      navigator.clipboard.writeText(textToCopy)
+      navigator.clipboard.writeText(outputElement.textContent)
         .then(() => {
-          alert("Blocklists copied to clipboard!");
+          log("Blocklists copied to clipboard!", "success");
+          console.log("Blocklists copied to clipboard!");
         })
         .catch((error) => {
-          console.error("Error copying blocklists:", error);
-          alert("Failed to copy blocklists. Please try again.");
+          log(`Failed to copy blocklists: ${error.message}`, "error");
+          console.error("Failed to copy blocklists:", error);
         });
     }
 

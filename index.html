@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blocklist Congregator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ddd;
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Blocklist Congregator</h1>
+  <p>Fetching blocklists... Please wait.</p>
+  <pre id="output">Loading...</pre>
+
+  <script>
+    const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
+    const customLists = [
+      "https://phishing.army/download/phishing_army_blocklist.txt",
+      "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/multi.txt"
+    ];
+    const hategroupLists = [
+      "https://www.github.developerdan.com/hosts/lists/hate-and-junk-extended.txt",
+      "https://raw.githubusercontent.com/marktron/fakenews/master/fakenews",
+      "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts",
+      "https://raw.githubusercontent.com/antifa-n/pihole/master/blocklist.txt",
+      "https://raw.githubusercontent.com/antifa-n/pihole/master/blocklist-pop.txt",
+      "https://raw.githubusercontent.com/antifa-n/pihole/master/blocklist-alttech.txt",
+      "https://raw.githubusercontent.com/chigh/hategroup-dnsbl/master/blocklist.txt"
+    ];
+
+    async function fetchBlocklists() {
+      try {
+        console.log("Fetching Firebog blocklists...");
+        // Fetch Firebog list of URLs
+        const firebogResponse = await fetch(firebogUrl);
+
+        if (!firebogResponse.ok) {
+          throw new Error(`Firebog fetch failed: ${firebogResponse.status}`);
+        }
+
+        const firebogText = await firebogResponse.text();
+        console.log("Firebog blocklists fetched successfully.");
+
+        const firebogLists = firebogText.trim().split("\n");
+
+        // Combine all lists
+        const allLists = [...firebogLists, ...hategroupLists, ...customLists];
+        console.log("Combined blocklists successfully.");
+
+        // Display the combined list
+        document.getElementById("output").textContent = allLists.join("\n");
+      } catch (error) {
+        console.error("Error fetching blocklists:", error);
+        document.getElementById("output").textContent =
+          "Error fetching blocklists. Please check the console for details.";
+      }
+    }
+
+    // Run the function on page load
+    fetchBlocklists();
+  </script>
+</body>
+
+</html>

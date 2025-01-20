@@ -339,18 +339,33 @@
 
     function copyToClipboard() {
       const outputElement = document.getElementById("output");
-      const logElement = document.getElementById("log");
 
-      navigator.clipboard.writeText(outputElement.textContent)
-        .then(() => log("Blocklists copied to clipboard!"))
-        .catch(error => log(`Failed to copy blocklists: ${error.message}`, "error"));
+      try {
+        navigator.clipboard.writeText(outputElement.textContent)
+          .then(() => {
+            const logElement = document.getElementById("log");
+            logElement.innerHTML = "<div class='success'>Blocklists copied to clipboard!</div>";
+          })
+          .catch((err) => {
+            console.error("Error copying to clipboard: ", err);
+            const logElement = document.getElementById("log");
+            logElement.innerHTML = "<div class='error'>Failed to copy blocklists to clipboard.</div>";
+          });
+      } catch (err) {
+        console.error("Error copying to clipboard: ", err);
+        const logElement = document.getElementById("log");
+        logElement.innerHTML = "<div class='error'>Failed to copy blocklists to clipboard.</div>";
+      }
     }
 
-    document.querySelectorAll(".checkbox-group input").forEach(checkbox => {
-      checkbox.addEventListener("change", updateBlocklists);
-    });
+    async function refreshData() {
+      await fetchBlocklists();
+      updateBlocklists();
+    }
 
-    fetchBlocklists();
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchBlocklists();
+    });
   </script>
 </body>
 

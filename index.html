@@ -24,6 +24,8 @@
       background: #ffffff;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
+      width: 100%;
+      /* Ensure the container is 100% width on smaller screens */
     }
 
     h1 {
@@ -104,6 +106,67 @@
       font-weight: normal;
       font-size: 0.9rem;
       font-family: 'Arial', sans-serif;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+        margin: 10px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      label {
+        font-size: 0.85rem;
+      }
+
+      button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+      }
+
+      pre {
+        font-size: 0.85rem;
+      }
+
+      .log {
+        font-size: 0.8rem;
+      }
+
+      .note {
+        font-size: 0.7rem;
+      }
+
+      .checkbox-group {
+        margin-bottom: 15px;
+      }
+    }
+
+    /* Further mobile adjustments for very small screens */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      button {
+        font-size: 0.85rem;
+        padding: 7px 14px;
+      }
+
+      label {
+        font-size: 0.8rem;
+      }
+
+      pre {
+        font-size: 0.8rem;
+      }
+
+      .log {
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>

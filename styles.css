@@ -1,0 +1,174 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    /* Changed to Roboto */
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.checkbox-group,
+.log,
+.firebog-options,
+.include-lists {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.checkbox-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.note {
+    font-size: 0.8rem;
+    color: #ff4d4d;
+    margin-left: 20px;
+}
+
+pre {
+    background: #f4f4f4;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.log {
+    margin-top: 20px;
+    background: #eef6ff;
+    padding: 10px;
+    border-left: 4px solid #007BFF;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #333;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.error {
+    color: #ff4d4d;
+    text-align: center;
+    font-weight: normal;
+    font-size: 0.9rem;
+    font-family: 'Arial', sans-serif;
+}
+
+.success {
+    color: #28a745;
+    text-align: center;
+    font-weight: normal;
+    font-size: 0.9rem;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Mobile responsiveness */
+@media(max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    label {
+        font-size: 0.85rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+
+    pre {
+        font-size: 0.85rem;
+    }
+
+    .log {
+        font-size: 0.8rem;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .note {
+        font-size: 0.7rem;
+    }
+
+    .checkbox-group {
+        margin-bottom: 15px;
+    }
+}
+
+/* Further mobile adjustments for very small screens */
+@media(max-width: 480px) {
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    button {
+        font-size: 0.85rem;
+        padding: 7px 14px;
+    }
+
+    label {
+        font-size: 0.8rem;
+    }
+
+    pre {
+        font-size: 0.8rem;
+    }
+
+    .log {
+        font-size: 0.75rem;
+    }
+}

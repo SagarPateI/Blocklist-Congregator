@@ -79,6 +79,21 @@
       color: #333;
     }
 
+    .checkbox-group {
+      margin: 20px 0;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .checkbox-group label {
+      display: block;
+      margin: 5px 0;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
     .error {
       color: #ff4d4d;
     }
@@ -92,6 +107,22 @@
 <body>
   <div class="container">
     <h1>Blocklist Congregator</h1>
+
+    <div class="checkbox-group">
+      <label>
+        <input type="checkbox" id="default-urls" checked> Include Default URLs
+      </label>
+      <label>
+        <input type="checkbox" id="firebog-urls" checked> Include Firebog URLs
+      </label>
+      <label>
+        <input type="checkbox" id="custom-lists" checked> Include Custom Lists
+      </label>
+      <label>
+        <input type="checkbox" id="hategroup-lists" checked> Include Hate Group Lists
+      </label>
+    </div>
+
     <pre id="output">Loading...</pre>
     <p id="status">Fetching blocklists... Please wait.</p>
     <button id="copy-btn" onclick="copyToClipboard()">Copy Blocklists</button>
@@ -100,11 +131,11 @@
   </div>
 
   <script>
+    const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
     const defaultUrls = [
       "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
       "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
     ];
-    const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
     const customLists = [
       "https://phishing.army/download/phishing_army_blocklist.txt",
       "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/multi.txt"
@@ -124,6 +155,11 @@
       const outputElement = document.getElementById("output");
       const logElement = document.getElementById("log");
 
+      const includeDefault = document.getElementById("default-urls").checked;
+      const includeFirebog = document.getElementById("firebog-urls").checked;
+      const includeCustom = document.getElementById("custom-lists").checked;
+      const includeHategroup = document.getElementById("hategroup-lists").checked;
+
       const log = (message, type = "info") => {
         const msg = document.createElement("div");
         msg.textContent = message;
@@ -137,19 +173,35 @@
         log("Starting blocklist fetching process...");
         logElement.innerHTML = ""; // Clear old logs
 
-        log("Fetching Firebog blocklists...");
-        const firebogResponse = await fetch(firebogUrl);
+        let allLists = [];
 
-        if (!firebogResponse.ok) {
-          throw new Error(`Firebog fetch failed: ${firebogResponse.status}`);
+        if (includeDefault) {
+          log("Including default URLs...");
+          allLists = allLists.concat(defaultUrls);
         }
 
-        const firebogText = await firebogResponse.text();
-        log("Firebog blocklists fetched successfully.");
+        if (includeFirebog) {
+          log("Fetching Firebog URLs...");
+          const firebogResponse = await fetch(firebogUrl);
 
-        const firebogLists = firebogText.trim().split("\n");
-        const allLists = [...defaultUrls, ...firebogLists, ...hategroupLists, ...customLists];
-        log("Combined all blocklists successfully.");
+          if (!firebogResponse.ok) {
+            throw new Error(`Firebog fetch failed: ${firebogResponse.status}`);
+          }
+
+          const firebogText = await firebogResponse.text();
+          const firebogLists = firebogText.trim().split("\n");
+          allLists = allLists.concat(firebogLists);
+        }
+
+        if (includeCustom) {
+          log("Including custom lists...");
+          allLists = allLists.concat(customLists);
+        }
+
+        if (includeHategroup) {
+          log("Including hate group lists...");
+          allLists = allLists.concat(hategroupLists);
+        }
 
         outputElement.textContent = allLists.join("\n");
         statusElement.textContent = "Blocklists fetched successfully!";

@@ -33,11 +33,30 @@
       margin-bottom: 20px;
     }
 
-    p {
-      text-align: center;
+    .checkbox-group {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    label {
+      font-size: 0.9rem;
       color: #555;
-      font-size: 1rem;
-      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
 
     button {
@@ -57,17 +76,6 @@
       background-color: #0056b3;
     }
 
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      max-height: 400px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
     .log {
       margin-top: 20px;
       background: #eef6ff;
@@ -78,51 +86,18 @@
       line-height: 1.6;
       color: #333;
     }
-
-    .checkbox-group {
-      margin: 20px 0;
-      padding: 10px;
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-
-    .checkbox-group label {
-      display: block;
-      margin: 5px 0;
-      font-size: 0.95rem;
-      color: #333;
-    }
-
-    .error {
-      color: #ff4d4d;
-    }
-
-    .success {
-      color: #28a745;
-    }
   </style>
 </head>
 
 <body>
   <div class="container">
     <h1>Blocklist Congregator</h1>
-
     <div class="checkbox-group">
-      <label>
-        <input type="checkbox" id="default-urls" checked> Include Default URLs
-      </label>
-      <label>
-        <input type="checkbox" id="firebog-urls" checked> Include Firebog URLs
-      </label>
-      <label>
-        <input type="checkbox" id="custom-lists" checked> Include Custom Lists
-      </label>
-      <label>
-        <input type="checkbox" id="hategroup-lists" checked> Include Hate Group Lists
-      </label>
+      <label><input type="checkbox" id="defaultUrlsCheckbox" checked> Default URLs</label>
+      <label><input type="checkbox" id="firebogUrlsCheckbox" checked> Firebog URLs</label>
+      <label><input type="checkbox" id="customListsCheckbox" checked> Custom Lists</label>
+      <label><input type="checkbox" id="hategroupListsCheckbox" checked> Hate-group Lists</label>
     </div>
-
     <pre id="output">Loading...</pre>
     <p id="status">Fetching blocklists... Please wait.</p>
     <button id="copy-btn" onclick="copyToClipboard()">Copy Blocklists</button>
@@ -131,11 +106,12 @@
   </div>
 
   <script>
-    const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
     const defaultUrls = [
       "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
       "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
     ];
+
+    const firebogUrl = "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick";
     const customLists = [
       "https://phishing.army/download/phishing_army_blocklist.txt",
       "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/multi.txt"
@@ -150,15 +126,12 @@
       "https://raw.githubusercontent.com/chigh/hategroup-dnsbl/master/blocklist.txt"
     ];
 
+    let firebogLists = [];
+
     async function fetchBlocklists() {
       const statusElement = document.getElementById("status");
       const outputElement = document.getElementById("output");
       const logElement = document.getElementById("log");
-
-      const includeDefault = document.getElementById("default-urls").checked;
-      const includeFirebog = document.getElementById("firebog-urls").checked;
-      const includeCustom = document.getElementById("custom-lists").checked;
-      const includeHategroup = document.getElementById("hategroup-lists").checked;
 
       const log = (message, type = "info") => {
         const msg = document.createElement("div");
@@ -173,40 +146,19 @@
         log("Starting blocklist fetching process...");
         logElement.innerHTML = ""; // Clear old logs
 
-        let allLists = [];
+        log("Fetching Firebog blocklists...");
+        const firebogResponse = await fetch(firebogUrl);
 
-        if (includeDefault) {
-          log("Including default URLs...");
-          allLists = allLists.concat(defaultUrls);
+        if (!firebogResponse.ok) {
+          throw new Error(`Firebog fetch failed: ${firebogResponse.status}`);
         }
 
-        if (includeFirebog) {
-          log("Fetching Firebog URLs...");
-          const firebogResponse = await fetch(firebogUrl);
+        const firebogText = await firebogResponse.text();
+        firebogLists = firebogText.trim().split("\n");
+        log("Firebog blocklists fetched successfully.");
 
-          if (!firebogResponse.ok) {
-            throw new Error(`Firebog fetch failed: ${firebogResponse.status}`);
-          }
-
-          const firebogText = await firebogResponse.text();
-          const firebogLists = firebogText.trim().split("\n");
-          allLists = allLists.concat(firebogLists);
-        }
-
-        if (includeCustom) {
-          log("Including custom lists...");
-          allLists = allLists.concat(customLists);
-        }
-
-        if (includeHategroup) {
-          log("Including hate group lists...");
-          allLists = allLists.concat(hategroupLists);
-        }
-
-        outputElement.textContent = allLists.join("\n");
+        updateBlocklists();
         statusElement.textContent = "Blocklists fetched successfully!";
-        statusElement.className = "success";
-        log("Blocklists displayed successfully.");
       } catch (error) {
         console.error("Error fetching blocklists:", error);
         statusElement.textContent = "Error fetching blocklists. Please try again.";
@@ -214,6 +166,24 @@
         outputElement.textContent = "Error fetching blocklists. Please check the console for details.";
         log(`Error: ${error.message}`, "error");
       }
+    }
+
+    function updateBlocklists() {
+      const outputElement = document.getElementById("output");
+
+      const includeDefaultUrls = document.getElementById("defaultUrlsCheckbox").checked;
+      const includeFirebogUrls = document.getElementById("firebogUrlsCheckbox").checked;
+      const includeCustomLists = document.getElementById("customListsCheckbox").checked;
+      const includeHategroupLists = document.getElementById("hategroupListsCheckbox").checked;
+
+      const selectedLists = [
+        ...(includeDefaultUrls ? defaultUrls : []),
+        ...(includeFirebogUrls ? firebogLists : []),
+        ...(includeCustomLists ? customLists : []),
+        ...(includeHategroupLists ? hategroupLists : [])
+      ];
+
+      outputElement.textContent = selectedLists.join("\n");
     }
 
     function copyToClipboard() {
@@ -228,6 +198,10 @@
           log(`Failed to copy blocklists: ${error.message}`, "error");
         });
     }
+
+    document.querySelectorAll(".checkbox-group input").forEach(checkbox => {
+      checkbox.addEventListener("change", updateBlocklists);
+    });
 
     fetchBlocklists();
   </script>

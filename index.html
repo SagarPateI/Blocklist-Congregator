@@ -2,373 +2,49 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blocklist Congregator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      /* Changed to Roboto */
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 20px;
-      padding: 20px;
-      background: #ffffff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      width: 100%;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .checkbox-group,
-    .log,
-    .firebog-options,
-    .include-lists {
-      padding-left: 15px;
-      padding-right: 15px;
-    }
-
-    .checkbox-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-size: 0.9rem;
-      color: #555;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .note {
-      font-size: 0.8rem;
-      color: #ff4d4d;
-      margin-left: 20px;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      max-height: 400px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    button {
-      display: block;
-      margin: 10px auto;
-      padding: 10px 20px;
-      font-size: 1rem;
-      background: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .log {
-      margin-top: 20px;
-      background: #eef6ff;
-      padding: 10px;
-      border-left: 4px solid #007BFF;
-      border-radius: 5px;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      color: #333;
-      padding-left: 15px;
-      padding-right: 15px;
-    }
-
-    .error {
-      color: #ff4d4d;
-      text-align: center;
-      font-weight: normal;
-      font-size: 0.9rem;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .success {
-      color: #28a745;
-      text-align: center;
-      font-weight: normal;
-      font-size: 0.9rem;
-      font-family: 'Arial', sans-serif;
-    }
-
-    /* Mobile responsiveness */
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-        margin: 10px;
-      }
-
-      h1 {
-        font-size: 1.6rem;
-      }
-
-      label {
-        font-size: 0.85rem;
-      }
-
-      button {
-        font-size: 0.9rem;
-        padding: 8px 16px;
-      }
-
-      pre {
-        font-size: 0.85rem;
-      }
-
-      .log {
-        font-size: 0.8rem;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .note {
-        font-size: 0.7rem;
-      }
-
-      .checkbox-group {
-        margin-bottom: 15px;
-      }
-    }
-
-    /* Further mobile adjustments for very small screens */
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      button {
-        font-size: 0.85rem;
-        padding: 7px 14px;
-      }
-
-      label {
-        font-size: 0.8rem;
-      }
-
-      pre {
-        font-size: 0.8rem;
-      }
-
-      .log {
-        font-size: 0.75rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocklist Congregator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="container">
-    <h1>Blocklist Congregator</h1>
-
-    <div class="checkbox-group">
-      <h3>Include Lists</h3>
-      <label><input type="checkbox" id="defaultUrlsCheckbox" checked> Default URLs</label>
-      <label><input type="checkbox" id="firebogUrlsCheckbox" checked> Firebog URLs</label>
-      <label><input type="checkbox" id="customListsCheckbox" checked> Custom Lists</label>
-      <label><input type="checkbox" id="hategroupListsCheckbox" checked> Hate-group Lists</label>
+    <div class="container">
+        <h1>Blocklist Congregator</h1>
+    
+        <div class="checkbox-group">
+            <h3>Include Lists</h3>
+            <label><input type="checkbox" id="defaultUrlsCheckbox" checked> Default URLs</label>
+            <label><input type="checkbox" id="firebogUrlsCheckbox" checked> Firebog URLs</label>
+            <label><input type="checkbox" id="customListsCheckbox" checked> Custom Lists</label>
+            <label><input type="checkbox" id="hategroupListsCheckbox" checked> Hate-group Lists</label>
+        </div>
+    
+        <div class="checkbox-group">
+            <h3>Firebog Options</h3>
+            <label><input type="checkbox" id="firebogTickedCheckbox" checked> Ticked lists</label>
+            <label>
+                <input type="checkbox" id="firebogNonCrossedCheckbox">
+                Non-crossed lists
+                <span class="note">(Not recommended)</span>
+            </label>
+            <label><input type="checkbox" id="firebogAdultCheckbox"> Adult lists</label>
+            <label>
+                <input type="checkbox" id="firebogAllCheckbox">
+                All lists
+                <span class="note">(Not recommended)</span>
+            </label>
+        </div>
+    
+        <button id="copy-btn" onclick="copyToClipboard()">Copy Blocklists</button>
+        <pre id="output">Loading...</pre>
+        <p id="status">Fetching blocklists... Please wait.</p>
+        <button id="refresh-btn" onclick="fetchBlocklists()">Refresh Blocklists</button>
+        <div id="log" class="log">Logs will appear here...</div>
     </div>
 
-    <div class="checkbox-group">
-      <h3>Firebog Options</h3>
-      <label><input type="checkbox" id="firebogTickedCheckbox" checked> Ticked lists</label>
-      <label>
-        <input type="checkbox" id="firebogNonCrossedCheckbox">
-        Non-crossed lists
-        <span class="note">(Not recommended)</span>
-      </label>
-      <label><input type="checkbox" id="firebogAdultCheckbox"> Adult lists</label>
-      <label>
-        <input type="checkbox" id="firebogAllCheckbox">
-        All lists
-        <span class="note">(Not recommended)</span>
-      </label>
-    </div>
-
-    <button id="copy-btn" onclick="copyToClipboard()">Copy Blocklists</button>
-    <pre id="output">Loading...</pre>
-    <p id="status">Fetching blocklists... Please wait.</p>
-    <button id="refresh-btn" onclick="fetchBlocklists()">Refresh Blocklists</button>
-    <div id="log" class="log">Logs will appear here...</div>
-  </div>
-
-  <script>
-    const defaultUrls = [
-      "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts",
-      "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
-    ];
-
-    const firebogUrls = {
-      ticked: "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=tick",
-      nonCrossed: "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=nocross",
-      adult: "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=adult",
-      all: "https://corsproxy.io/?https://v.firebog.net/hosts/lists.php?type=all"
-    };
-
-    const customLists = [
-      "https://phishing.army/download/phishing_army_blocklist.txt",
-      "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/multi.txt"
-    ];
-
-    const hategroupLists = [
-      "https://www.github.developerdan.com/hosts/lists/hate-and-junk-extended.txt",
-      "https://raw.githubusercontent.com/marktron/fakenews/master/fakenews",
-      "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling/hosts",
-      "https://raw.githubusercontent.com/antifa-n/pihole/master/blocklist.txt",
-      "https://raw.githubusercontent.com/antifa-n/pihole/master/blocklist-pop.txt",
-      "https://raw.githubusercontent.com/antifa-n/pihole/master/blocklist-alttech.txt",
-      "https://raw.githubusercontent.com/chigh/hategroup-dnsbl/master/blocklist.txt"
-    ];
-
-    let firebogLists = { ticked: [], nonCrossed: [], adult: [], all: [] };
-
-    async function fetchBlocklists() {
-      const statusElement = document.getElementById("status");
-      const logElement = document.getElementById("log");
-
-      const log = (message, type = "info") => {
-        const msg = document.createElement("div");
-        msg.textContent = message;
-        if (type === "error") msg.style.color = "#ff4d4d";
-        logElement.appendChild(msg);
-        logElement.scrollTop = logElement.scrollHeight;
-      };
-
-      try {
-        statusElement.textContent = "Fetching blocklists... Please wait.";
-        statusElement.className = "";  // Reset any previous status class
-        log("Starting blocklist fetching process...");
-        logElement.innerHTML = ""; // Clear old logs
-
-        for (const [key, url] of Object.entries(firebogUrls)) {
-          log(`Fetching Firebog ${key} lists...`);
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`Failed to fetch Firebog ${key}: ${response.status}`);
-          firebogLists[key] = (await response.text()).trim().split("\n");
-          log(`Firebog ${key} lists fetched successfully.`);
-        }
-
-        updateBlocklists();
-        statusElement.textContent = "Blocklists fetched successfully!";
-        statusElement.className = "success";  // Apply success class for green and centered text
-      } catch (error) {
-        console.error("Error fetching blocklists:", error);
-        statusElement.textContent = "Error fetching blocklists. Please try again.";
-        statusElement.className = "error";  // Apply error class for red text
-        log(`Error: ${error.message}`, "error");
-      }
-    }
-
-    function updateBlocklists() {
-      const outputElement = document.getElementById("output");
-      const logElement = document.getElementById("log");
-
-      const log = (message, type = "info") => {
-        const msg = document.createElement("div");
-        msg.textContent = message;
-        if (type === "error") msg.style.color = "#ff4d4d";
-        logElement.appendChild(msg);
-        logElement.scrollTop = logElement.scrollHeight;
-      };
-
-      const includeDefaultUrls = document.getElementById("defaultUrlsCheckbox").checked;
-      const includeFirebogUrls = document.getElementById("firebogUrlsCheckbox").checked;
-      const includeCustomLists = document.getElementById("customListsCheckbox").checked;
-      const includeHategroupLists = document.getElementById("hategroupListsCheckbox").checked;
-
-      const includeFirebogTicked = document.getElementById("firebogTickedCheckbox").checked;
-      const includeFirebogNonCrossed = document.getElementById("firebogNonCrossedCheckbox").checked;
-      const includeFirebogAdult = document.getElementById("firebogAdultCheckbox").checked;
-      const includeFirebogAll = document.getElementById("firebogAllCheckbox").checked;
-
-      // Collecting lists
-      const lists = [
-        { name: "Default URLs", urls: includeDefaultUrls ? defaultUrls : [] },
-        { name: "Firebog Ticked", urls: includeFirebogUrls && includeFirebogTicked ? firebogLists.ticked : [] },
-        { name: "Firebog Non-Crossed", urls: includeFirebogUrls && includeFirebogNonCrossed ? firebogLists.nonCrossed : [] },
-        { name: "Firebog Adult", urls: includeFirebogUrls && includeFirebogAdult ? firebogLists.adult : [] },
-        { name: "Firebog All", urls: includeFirebogUrls && includeFirebogAll ? firebogLists.all : [] },
-        { name: "Custom Lists", urls: includeCustomLists ? customLists : [] },
-        { name: "Hate-group Lists", urls: includeHategroupLists ? hategroupLists : [] }
-      ];
-
-      const urlTracker = new Map(); // Tracks URL occurrences
-      const uniqueUrls = [];
-
-      lists.forEach(({ name, urls }) => {
-        urls.forEach((url) => {
-          if (url.trim() === "") return; // Skip blank lines
-
-          if (urlTracker.has(url)) {
-            const duplicateSource = urlTracker.get(url);
-            log(`Duplicate found: "${url}" already exists in "${duplicateSource}" and "${name}"`, "error");
-          } else {
-            urlTracker.set(url, name); // Track the URL's first occurrence
-            uniqueUrls.push(url);
-          }
-        });
-      });
-
-      outputElement.textContent = uniqueUrls.join("\n");
-    }
-
-    function copyToClipboard() {
-      const outputElement = document.getElementById("output");
-
-      try {
-        navigator.clipboard.writeText(outputElement.textContent)
-          .then(() => {
-            const logElement = document.getElementById("log");
-            logElement.innerHTML = "<div class='success'>Blocklists copied to clipboard!</div>";
-          })
-          .catch((err) => {
-            console.error("Error copying to clipboard: ", err);
-            const logElement = document.getElementById("log");
-            logElement.innerHTML = "<div class='error'>Failed to copy blocklists to clipboard.</div>";
-          });
-      } catch (err) {
-        console.error("Error copying to clipboard: ", err);
-        const logElement = document.getElementById("log");
-        logElement.innerHTML = "<div class='error'>Failed to copy blocklists to clipboard.</div>";
-      }
-    }
-
-    async function refreshData() {
-      await fetchBlocklists();
-      updateBlocklists();
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      fetchBlocklists();
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 
 </html>

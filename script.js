@@ -41,9 +41,9 @@ async function fetchBlocklists() {
 
     try {
         statusElement.textContent = "Fetching blocklists... Please wait.";
-        statusElement.className = "";  // Reset any previous status class
+        statusElement.className = "";
         log("Starting blocklist fetching process...");
-        logElement.innerHTML = ""; // Clear old logs
+        logElement.innerHTML = "";
 
         for (const [key, url] of Object.entries(firebogUrls)) {
             log(`Fetching Firebog ${key} lists...`);
@@ -55,11 +55,11 @@ async function fetchBlocklists() {
 
         updateBlocklists();
         statusElement.textContent = "Blocklists fetched successfully!";
-        statusElement.className = "success";  // Apply success class for green and centered text
+        statusElement.className = "success";
     } catch (error) {
         console.error("Error fetching blocklists:", error);
         statusElement.textContent = "Error fetching blocklists. Please try again.";
-        statusElement.className = "error";  // Apply error class for red text
+        statusElement.className = "error";
         log(`Error: ${error.message}`, "error");
     }
 }
@@ -86,7 +86,6 @@ function updateBlocklists() {
     const includeFirebogAdult = document.getElementById("firebogAdultCheckbox").checked;
     const includeFirebogAll = document.getElementById("firebogAllCheckbox").checked;
 
-    // Collecting lists
     const lists = [
         { name: "Default URLs", urls: includeDefaultUrls ? defaultUrls : [] },
         { name: "Firebog Ticked", urls: includeFirebogUrls && includeFirebogTicked ? firebogLists.ticked : [] },
@@ -97,24 +96,31 @@ function updateBlocklists() {
         { name: "Hate-group Lists", urls: includeHategroupLists ? hategroupLists : [] }
     ];
 
-    const urlTracker = new Map(); // Tracks URL occurrences
+    const urlTracker = new Map();
     const uniqueUrls = [];
 
     lists.forEach(({ name, urls }) => {
         urls.forEach((url) => {
-            if (url.trim() === "") return; // Skip blank lines
+            if (url.trim() === "") return;
 
             if (urlTracker.has(url)) {
                 const duplicateSource = urlTracker.get(url);
                 log(`Duplicate found: "${url}" already exists in "${duplicateSource}" and "${name}"`, "error");
             } else {
-                urlTracker.set(url, name); // Track the URL's first occurrence
+                urlTracker.set(url, name);
                 uniqueUrls.push(url);
             }
         });
     });
 
     outputElement.textContent = uniqueUrls.join("\n");
+}
+
+function attachCheckboxListeners() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", updateBlocklists);
+    });
 }
 
 function copyToClipboard() {
@@ -138,11 +144,7 @@ function copyToClipboard() {
     }
 }
 
-async function refreshData() {
-    await fetchBlocklists();
-    updateBlocklists();
-}
-
 document.addEventListener("DOMContentLoaded", () => {
     fetchBlocklists();
+    attachCheckboxListeners();
 });
